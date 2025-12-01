@@ -1,7 +1,7 @@
 return {
 	bg = "#161b12",
 	fg = "#e4eddc",
-	primary = "#b1f779",
+	primary = "#b1f750",
 	secondary = "#d3cc95",
 	accent = "#9db78d",
 	highlight = "#b7d6a4",
