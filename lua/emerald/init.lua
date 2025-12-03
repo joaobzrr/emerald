@@ -75,7 +75,7 @@ function M.setup(config)
         -- UI
 		CursorLine = { bg = colors.shade1 },
 		StatusLine = { fg = colors.fg, bg = colors.highlight:darkened(42) },
-		StatusLineNC = { fg = colors.fg, bg = colors.highlight:desaturated(25):darkened(35) },
+		StatusLineNC = { fg = colors.fg, bg = colors.highlight:desaturated(25):darkened(45) },
 		WinSeparator = { fg = colors.shade2, bg = "NONE" },
 		NormalFloat = { fg = colors.fg, bg = colors.bg },
 		FloatBorder = { fg = colors.shade3, bg = colors.bg },
