@@ -63,9 +63,13 @@ function M.setup(config)
 		PreProc = { fg = colors.primary },
 		Comment = { fg = colors.muted },
 
+        -- Annotations
+        AnnotationTODO = { fg = color.new('#ffffff'), bg = color.new_from_hsl({ h = 20, s = 80, l = 35 }) },
+        AnnotationNOTE = { fg = color.new('#ffffff'), bg = color.new_from_hsl({ h = 250, s = 80, l = 35 }) },
+
         -- UI
 		CursorLine = { bg = colors.bg2 },
-		StatusLine = { fg = colors.fg, bg = colors.accent:with_saturation(10):darkened(60) },
+		StatusLine = { fg = colors.fg, bg = colors.accent:with_saturation(30):darkened(40) },
 		StatusLineNC = { fg = colors.fg2, bg = colors.gray2 },
 		WinSeparator = { fg = colors.gray2, bg = "NONE" },
 		NormalFloat = { bg = colors.bg },
