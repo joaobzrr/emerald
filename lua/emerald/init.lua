@@ -2,13 +2,15 @@ local color = require("emerald.color")
 
 local M = { config = {} }
 
-local function generate_shades(base_color, count, factor, mode, prefix)
-	local shades = {}
-	local fn = mode == "lighten" and base_color.lightened or base_color.darkened
-	for i = 1, count do
-		shades[prefix .. i] = fn(base_color, i * factor)
-	end
-	return shades
+function M.generate_shades(c1, c2, steps, prefix)
+    local t_min = 0.05
+    local t_max = 0.95
+    local shades = {}
+    for i = 1, steps do
+        local t = t_min + ((i - 1) / (steps - 1)) * (t_max - t_min)
+        shades[prefix .. i] = color.interpolate(c1, c2, t)
+    end
+    return shades
 end
 
 local function make_colors(base)
@@ -17,13 +19,16 @@ local function make_colors(base)
 		palette[k] = color.new(v)
 	end
 
-	return vim.tbl_extend(
-		"keep",
-		palette,
-		generate_shades(palette.fg, 6, 16, "darken", "fg"),
-		generate_shades(palette.bg, 6, 2, "lighten", "bg"),
-		generate_shades(color.new("#000000"), 10, 10, "lighten", "gray")
-	)
+    local shades = M.generate_shades(palette.bg, palette.fg, 11, "shade")
+
+    return vim.tbl_extend("keep", palette, shades)
+	--return vim.tbl_extend(
+	--	"keep",
+	--	palette,
+	--	generate_shades(palette.fg, 6, 16, "darken", "fg"),
+	--	generate_shades(palette.bg, 6, 2, "lighten", "bg"),
+	--	generate_shades(color.new("#000000"), 10, 10, "lighten", "gray")
+	--)
 end
 
 function M.get_config()
@@ -68,18 +73,18 @@ function M.setup(config)
         AnnotationNOTE = { fg = color.new('#ffffff'), bg = color.new_from_hsl({ h = 250, s = 80, l = 35 }) },
 
         -- UI
-		CursorLine = { bg = colors.bg2 },
-		StatusLine = { fg = colors.fg, bg = colors.accent:with_saturation(30):darkened(40) },
-		StatusLineNC = { fg = colors.fg2, bg = colors.gray2 },
-		WinSeparator = { fg = colors.gray2, bg = "NONE" },
-		NormalFloat = { bg = colors.bg },
-		FloatBorder = { fg = colors.bg6 },
-        Pmenu = { bg = colors.bg },
-        PmenuSel = { bg = colors.bg2 },
-        PmenuBorder = { fg = colors.bg6 },
-        PmenuMatch = { fg = colors.primary },
-        PmenuKind = { fg = colors.highlight },
-        PmenuExtra = { fg = colors.accent },
+		CursorLine = { bg = colors.shade1 },
+		StatusLine = { fg = colors.fg, bg = colors.highlight:darkened(42) },
+		StatusLineNC = { fg = colors.fg, bg = colors.highlight:desaturated(25):darkened(35) },
+		WinSeparator = { fg = colors.shade2, bg = "NONE" },
+		NormalFloat = { fg = colors.fg, bg = colors.bg },
+		FloatBorder = { fg = colors.shade3, bg = colors.bg },
+        Pmenu = { fg = colors.fg, bg = colors.bg },
+        PmenuBorder = { fg = colors.shade3, bg = colors.bg },
+        PmenuSel = { bg = colors.shade2 },
+        PmenuMatch = { fg = colors.highlight },
+        PmenuKind = { fg = colors.primary },
+        PmenuExtra = { fg = colors.secondary },
 
 		-- Diff
 		DiffAdd = { bg = colors.bg:with_overlay("#00ff00", 10) },
@@ -87,14 +92,19 @@ function M.setup(config)
 
 		-- mini.pick
 		MiniPickNormal = { fg = colors.fg, bg = colors.bg },
-		MiniPickBorder = { fg = colors.bg6, bg = colors.bg },
-		MiniPickBorderBusy = { fg = colors.bg6, bg = colors.bg },
-		MiniPickBorderText = { fg = colors.fg2 },
-		MiniPickPrompt = { fg = colors.primary },
-		MiniPickMatchRanges = { fg = colors.primary },
+		MiniPickBorder = { fg = colors.shade3, bg = colors.bg },
+		MiniPickBorderBusy = { fg = colors.shade5, bg = colors.bg },
+		MiniPickBorderText = { fg = colors.shade7 },
+		MiniPickPrompt = { fg = colors.fg },
+		MiniPickMatchRanges = { fg = colors.highlight },
 
 		-- Oil
 		OilDir = { fg = colors.accent },
+		OilCreate = { fg = colors.primary },
+        OilCopy = { fg = colors.primary },
+        OilRestore = { fg = colors.primary },
+        OilMove = { fg = colors.primary },
+        OilChange = { fg = colors.primary },
 	}
 
 	for group, opts in pairs(highlights) do

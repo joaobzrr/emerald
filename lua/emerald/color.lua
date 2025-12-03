@@ -116,4 +116,19 @@ function M.new_from_hsl(hsl)
     return color
 end
 
+function M.interpolate(c1, c2, t)
+    local rgb1 = oklab_utils.hex2rgb(c1.hex)
+    local rgb2 = oklab_utils.hex2rgb(c2.hex)
+    local lab1 = oklab_utils.rgb2oklab(rgb1)
+    local lab2 = oklab_utils.rgb2oklab(rgb2)
+
+    local lab = {
+        l = lab1.l + (lab2.l - lab1.l) * t,
+        a = lab1.a + (lab2.a - lab1.a) * t,
+        b = lab1.b + (lab2.b - lab1.b) * t,
+    }
+
+    return M.new(oklab_utils.rgb2hex(oklab_utils.oklab2rgb(lab)))
+end
+
 return M
