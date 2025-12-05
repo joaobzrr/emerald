@@ -1,11 +1,32 @@
-return {
-	bg = "#1a1d1a", -- unchanged
-	fg = "#d4d8cf", -- unchanged
-	primary = "#9bbd6f", -- keyword: slightly lighter & a touch greener to stand apart
-	secondary = "#78a98f", -- unchanged (remains the blue-lavender-tinted jade)
-	accent = "#969966", -- function: slightly darker + slightly duller to separate from primary
-	highlight = "#ada0c4", -- constant: ~8% darker, lavender is now visibly lavender
-	muted = "#6c7162", -- unchanged
-	info = "#84a375",
-	emphasis = "#abb474",
-}
+local M = {}
+
+function M.get_colors()
+    local charcoal = "#1a1d1a"
+    local pearl =  "#d4d8cf"
+    local sage = "#9bbd6f"
+    local olive = "#969966"
+    local seafoam = "#78a98f"
+    local lavender = "#ada0c4"
+    local moss = "#6c7162"
+
+
+    return {
+        charcoal = charcoal,
+        pearl = pearl,
+        sage = sage,
+        olive = olive,
+        seafom = seafoam,
+        lavender = lavender,
+        moss = moss,
+
+        bg = charcoal,
+        fg = pearl,
+        keyword = sage,
+        func = olive,
+        type = seafoam,
+        constant = lavender,
+        comment = moss,
+    }
+end
+
+return M

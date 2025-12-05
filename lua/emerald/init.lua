@@ -13,9 +13,9 @@ function M.generate_shades(c1, c2, steps, prefix)
     return shades
 end
 
-local function make_colors(base)
+local function make_colors(colorset)
 	local palette = {}
-	for k, v in pairs(base) do
+	for k, v in pairs(colorset.get_colors()) do
 		palette[k] = color.new(v)
 	end
 
@@ -57,16 +57,16 @@ function M.setup(config)
         -- Syntax
 		Normal = { fg = colors.fg, bg = colors.bg },
 		Identifier = { fg = colors.fg },
-		Keyword = { fg = colors.primary },
-		Statement = { fg = colors.primary },
-		Function = { fg = colors.accent },
-		Type = { fg = colors.secondary },
+		Keyword = { fg = colors.keyword },
+		Statement = { fg = colors.keyword },
+		Function = { fg = colors.func },
+		Type = { fg = colors.type },
 		Operator = { fg = colors.fg },
-		String = { fg = colors.highlight },
+		String = { fg = colors.constant },
 		Special = { fg = colors.emphasis },
-		Constant = { fg = colors.highlight },
-		PreProc = { fg = colors.primary },
-		Comment = { fg = colors.muted },
+		Constant = { fg = colors.constant },
+		PreProc = { fg = colors.keyword },
+		Comment = { fg = colors.comment },
 
         -- Annotations
         AnnotationTODO = { fg = color.new('#ffffff'), bg = color.new_from_hsl({ h = 20, s = 80, l = 35 }) },
@@ -74,17 +74,17 @@ function M.setup(config)
 
         -- UI
 		CursorLine = { bg = colors.shade1 },
-		StatusLine = { fg = colors.fg, bg = colors.highlight:darkened(42) },
-		StatusLineNC = { fg = colors.fg, bg = colors.highlight:desaturated(25):darkened(45) },
+		StatusLine = { fg = colors.fg, bg = colors.constant:darkened(42) },
+		StatusLineNC = { fg = colors.fg, bg = colors.constant:desaturated(25):darkened(45) },
 		WinSeparator = { fg = colors.shade2, bg = "NONE" },
 		NormalFloat = { fg = colors.fg, bg = colors.bg },
 		FloatBorder = { fg = colors.shade3, bg = colors.bg },
         Pmenu = { fg = colors.fg, bg = colors.bg },
         PmenuBorder = { fg = colors.shade3, bg = colors.bg },
         PmenuSel = { bg = colors.shade2 },
-        PmenuMatch = { fg = colors.highlight },
-        PmenuKind = { fg = colors.primary },
-        PmenuExtra = { fg = colors.secondary },
+        PmenuMatch = { fg = colors.constant },
+        PmenuKind = { fg = colors.keyword },
+        PmenuExtra = { fg = colors.type },
 
 		-- Diff
 		DiffAdd = { bg = colors.bg:with_overlay("#00ff00", 10) },
@@ -96,15 +96,15 @@ function M.setup(config)
 		MiniPickBorderBusy = { fg = colors.shade5, bg = colors.bg },
 		MiniPickBorderText = { fg = colors.shade7 },
 		MiniPickPrompt = { fg = colors.fg },
-		MiniPickMatchRanges = { fg = colors.highlight },
+		MiniPickMatchRanges = { fg = colors.constant },
 
 		-- Oil
-		OilDir = { fg = colors.accent },
-		OilCreate = { fg = colors.primary },
-        OilCopy = { fg = colors.primary },
-        OilRestore = { fg = colors.primary },
-        OilMove = { fg = colors.primary },
-        OilChange = { fg = colors.primary },
+		OilDir = { fg = colors.func },
+		OilCreate = { fg = colors.keyword },
+        OilCopy = { fg = colors.keyword },
+        OilRestore = { fg = colors.keyword },
+        OilMove = { fg = colors.keyword },
+        OilChange = { fg = colors.keyword },
 	}
 
 	for group, opts in pairs(highlights) do
