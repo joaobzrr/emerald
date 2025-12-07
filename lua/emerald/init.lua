@@ -2,6 +2,11 @@ local color = require("emerald.color")
 
 local M = { config = {} }
 
+local current_file = vim.fs.normalize(debug.getinfo(1, "S").source:sub(2))
+
+local current_dir = current_file:match("(.+[\\/])")
+current_dir = current_dir:gsub("[\\/]+$", "")
+
 function M.generate_shades(c1, c2, steps, prefix)
     local t_min = 0.05
     local t_max = 0.95
@@ -31,15 +36,27 @@ local function make_colors(colorset)
 	--)
 end
 
-function M.get_config()
-	return M.config
+function M.load_highlights(colors)
+    local module_paths = vim.fn.glob(current_dir .. '/highlights/*.lua', false, true)
+
+    local highlights = {}
+    for _, file in pairs(module_paths) do
+        local module_name = vim.fs.normalize(file)
+            :gsub('^.*/lua/', '')
+            :gsub('%.lua$', '')
+            :gsub('/', '.')
+
+        print('module_name = ' .. module_name)
+
+        local module = require(module_name)
+        highlights = vim.tbl_extend('keep', highlights, module.highlights(colors))
+    end
+
+    return highlights
 end
 
-function M.set_colorset(colorset)
-	M.setup({ colorset = colorset })
-	vim.cmd.colorscheme("emerald")
-end
-
+-- TODO: This function should just setup the config.
+-- Loading should happen when vim.cmd.colorscheme is called.
 function M.setup(config)
 	if config ~= nil and type(config) ~= "table" then
 		error("setup expectes a table or nil")
@@ -53,59 +70,7 @@ function M.setup(config)
 	local colorset = require("emerald.colorsets." .. config.colorset)
 	local colors = make_colors(colorset)
 
-	local highlights = {
-        -- Syntax
-		Normal = { fg = colors.fg, bg = colors.bg },
-		Identifier = { fg = colors.fg },
-		Keyword = { fg = colors.keyword },
-		Statement = { fg = colors.keyword },
-		Function = { fg = colors.func },
-		Type = { fg = colors.type },
-		Operator = { fg = colors.fg },
-		String = { fg = colors.constant },
-		Special = { fg = colors.emphasis },
-		Constant = { fg = colors.constant },
-		PreProc = { fg = colors.keyword },
-		Comment = { fg = colors.comment },
-
-        -- Annotations
-        AnnotationTODO = { fg = color.new('#ffffff'), bg = color.new_from_hsl({ h = 20, s = 80, l = 35 }) },
-        AnnotationNOTE = { fg = color.new('#ffffff'), bg = color.new_from_hsl({ h = 250, s = 80, l = 35 }) },
-
-        -- UI
-		CursorLine = { bg = colors.shade1 },
-		StatusLine = { fg = colors.fg, bg = colors.constant:darkened(42) },
-		StatusLineNC = { fg = colors.fg, bg = colors.constant:desaturated(25):darkened(45) },
-		WinSeparator = { fg = colors.shade2, bg = "NONE" },
-		NormalFloat = { fg = colors.fg, bg = colors.bg },
-		FloatBorder = { fg = colors.shade3, bg = colors.bg },
-        Pmenu = { fg = colors.fg, bg = colors.bg },
-        PmenuBorder = { fg = colors.shade3, bg = colors.bg },
-        PmenuSel = { bg = colors.shade2 },
-        PmenuMatch = { fg = colors.constant },
-        PmenuKind = { fg = colors.keyword },
-        PmenuExtra = { fg = colors.type },
-
-		-- Diff
-		DiffAdd = { bg = colors.bg:with_overlay("#00ff00", 10) },
-		DiffDelete = { bg = colors.bg:with_overlay("#ff0000", 10) },
-
-		-- mini.pick
-		MiniPickNormal = { fg = colors.fg, bg = colors.bg },
-		MiniPickBorder = { fg = colors.shade3, bg = colors.bg },
-		MiniPickBorderBusy = { fg = colors.shade5, bg = colors.bg },
-		MiniPickBorderText = { fg = colors.shade7 },
-		MiniPickPrompt = { fg = colors.fg },
-		MiniPickMatchRanges = { fg = colors.constant },
-
-		-- Oil
-		OilDir = { fg = colors.func },
-		OilCreate = { fg = colors.keyword },
-        OilCopy = { fg = colors.keyword },
-        OilRestore = { fg = colors.keyword },
-        OilMove = { fg = colors.keyword },
-        OilChange = { fg = colors.keyword },
-	}
+    local highlights = M.load_highlights(colors)
 
 	for group, opts in pairs(highlights) do
 		for k, v in pairs(opts) do
@@ -115,6 +80,15 @@ function M.setup(config)
 		end
 		vim.api.nvim_set_hl(0, group, opts)
 	end
+end
+
+function M.get_config()
+	return M.config
+end
+
+function M.set_colorset(colorset)
+	M.setup({ colorset = colorset })
+	vim.cmd.colorscheme("emerald")
 end
 
 return M

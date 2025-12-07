@@ -1,0 +1,1 @@
+- [x] Add per-plugin highlighting files.

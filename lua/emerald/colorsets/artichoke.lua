@@ -8,6 +8,7 @@ function M.get_colors()
     local seafoam = "#78a98f"
     local lavender = "#ada0c4"
     local moss = "#6c7162"
+    local pink = "#c4a0c1"
 
 
     return {
@@ -18,6 +19,7 @@ function M.get_colors()
         seafom = seafoam,
         lavender = lavender,
         moss = moss,
+        pink = pink,
 
         bg = charcoal,
         fg = pearl,
