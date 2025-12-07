@@ -9,7 +9,7 @@ function M.highlights(colors)
         Statement = { fg = colors.keyword },
         Function = { fg = colors.func },
         Type = { fg = colors.type },
-        Operator = { fg = colors.pink },
+        Operator = { fg = colors.fg },
         String = { fg = colors.constant },
         Special = { fg = colors.emphasis },
         Constant = { fg = colors.constant },

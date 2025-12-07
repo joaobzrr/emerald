@@ -46,8 +46,6 @@ function M.load_highlights(colors)
             :gsub('%.lua$', '')
             :gsub('/', '.')
 
-        print('module_name = ' .. module_name)
-
         local module = require(module_name)
         highlights = vim.tbl_extend('keep', highlights, module.highlights(colors))
     end
